@@ -1,9 +1,15 @@
 from tables import *
 from insert import *
+from create import *
 import sqlite3
 from sqlite3 import Error
 
-
+policies_table ="""CREATE TABLE IF NOT EXISTS policies (
+                                barcode text NOT NULL,
+                                length text NOT NULL,
+                                description text NOT NULL,
+                                FOREIGN KEY(barcode) REFERENCES product(barcode)
+                            );"""
 def create_connection(db_file):
     conn = None
     try:
@@ -96,7 +102,7 @@ def rem_product(conn):
     conn.commit()
 
 def check_profit(conn):
-    ins="SELECT (sell_cost-order_cost) as profits from profit; "
+    ins="SELECT (sell_cost-order_cost) as profits from profit;"
     execute_instruction(conn,ins)
     conn.commit()
 
@@ -147,30 +153,32 @@ def change_media(conn):
     conn.commit()
 
 def create_tables(conn):
-    execute_instruction(conn, customer_table)
-    execute_instruction(conn, product_table)
-    execute_instruction(conn, reservation_table)
-    execute_instruction(conn, profit_table)
-    execute_instruction(conn, borrowed_table)
-    execute_instruction(conn, employee_table)
-    execute_instruction(conn, outstanding_table)
-    execute_instruction(conn, author_table)
-    execute_instruction(conn,book_table)
-    execute_instruction(conn, media_table)
-    execute_instruction(conn, salary_table)
+    #execute_instruction(conn, customer_table)
+    #execute_instruction(conn, product_table)
+    #execute_instruction(conn, reservation_table)
+    #execute_instruction(conn, profit_table)
+    #execute_instruction(conn, borrowed_table)
+    #execute_instruction(conn, employee_table)
+    #execute_instruction(conn, outstanding_table)
+    #execute_instruction(conn, author_table)
+    #execute_instruction(conn,book_table)
+    #execute_instruction(conn, media_table)
+    #execute_instruction(conn, salary_table)
+    execute_instruction(conn, policies_table)
 
 def insert_data(conn):
-    execute_instruction(conn, insert_customer)
-    execute_instruction(conn,insert_employee)
-    execute_instruction(conn,insert_salary)
-    execute_instruction(conn,insert_product)
-    execute_instruction(conn,insert_book)
-    execute_instruction(conn,insert_author)
-    execute_instruction(conn, insert_media)
-    execute_instruction(conn, insert_reservation)
-    execute_instruction(conn, insert_borrowed)
-    execute_instruction(conn, insert_profit)
-    execute_instruction(conn, insert_outstanding)
+    #execute_instruction(conn, insert_customer)
+    #execute_instruction(conn,insert_employee)
+    #execute_instruction(conn,insert_salary)
+    #execute_instruction(conn,insert_product)
+    #execute_instruction(conn,insert_book)
+    #execute_instruction(conn,insert_author)
+    #execute_instruction(conn, insert_media)
+    #execute_instruction(conn, insert_reservation)
+    #execute_instruction(conn, insert_borrowed)
+    #execute_instruction(conn, insert_profit)
+    #execute_instruction(conn, insert_outstanding)
+    execute_instruction(conn, policies_table)
 
 def main():
     database = r"lib.db"

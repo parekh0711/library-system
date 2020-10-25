@@ -33,6 +33,225 @@ def select(conn,instruction):
     except Error as e:
         print(e)
 
+def change_employee():
+    fetch_employee()
+    ins0 = "DELETE FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
+    ins = "INSERT INTO employee VALUES({},{},'{}','{}','{}','{}','{}','{}','{}');".format(employeeid_entry.get(),aadhar_entry.get(),pan_entry.get(),firstname_entry.get(),lastname_entry.get(),dob_entry.get(),phone_entry.get(),address_entry.get(),designation_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins0)
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def fetch_employee():
+    ins0 = "SELECT * FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
+
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        select(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def delete_employee():
+    ins = "DELETE FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def add_policy():
+    ins = "INSERT INTO policies VALUES('{}','{}','{}');".format(barcode_entry.get(),length_entry.get(),description_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def delete_policy():
+    ins = "DELETE FROM policies WHERE barcode='{}';".format(barcode_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def change_policy():
+    fetch_policy()
+    ins0 = "DELETE FROM policies WHERE barcode='{}';".format(barcode_entry.get())
+    ins = "INSERT INTO policies VALUES('{}','{}','{}');".format(barcode_entry.get(),length_entry.get(),description_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins0)
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def fetch_policy():
+    ins0 = "SELECT * FROM policies WHERE barcode='{}';".format(barcode_entry.get())
+
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        select(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def add_product_book():
+    ins0 = "INSERT INTO product VALUES('{}',Book,In_stock);".format(barcode_entry.get())
+    ins="INSERT INTO book VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(barcode_entry.get(),authorid_entry.get(),title_entry.get(),year_entry.get(),publisher_entry.get(),genre_entry.get(),cost_entry.get(),cond_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        execute_instruction(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def add_product_media():
+    ins0 = "INSERT INTO product VALUES('{}',CD,In_stock);".format(barcode_entry.get())
+    ins="INSERT INTO media VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(barcode_entry.get(),title_entry.get(),year_entry.get(),runtime_entry.get(),category_entry.get(),cost_entry.get(),cond_entry.get(),genre_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        execute_instruction(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def delete_product_book():
+    ins = "DELETE FROM book WHERE barcode='{}';".format(barcode_entry.get())
+    ins0 = "DELETE FROM product WHERE barcode='{}';".format(barcode_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        execute_instruction(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def delete_media():
+    ins = "DELETE FROM media WHERE barcode='{}';".format(barcode_entry.get())
+    ins0 = "DELETE FROM product WHERE barcode='{}';".format(barcode_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        execute_instruction(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def fetch_book():
+    ins0 = "SELECT * FROM book WHERE barcode='{}';".format(barcode_entry.get())
+
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        select(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def fetch_media():
+    ins0 = "SELECT * FROM media WHERE barcode='{}';".format(barcode_entry.get())
+
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        select(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def change_product_book():
+    fetch_book()
+    ins0 = "DELETE FROM book WHERE barcode='{}';".format(barcode_entry.get())
+    ins="INSERT INTO book VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(barcode_entry.get(),authorid_entry.get(),title_entry.get(),year_entry.get(),publisher_entry.get(),genre_entry.get(),cost_entry.get(),cond_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins0)
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def change_product_media():
+    fetch_media()
+    ins0 = "DELETE FROM media WHERE barcode='{}';".format(barcode_entry.get())
+    ins="INSERT INTO media VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(barcode_entry.get(),title_entry.get(),year_entry.get(),runtime_entry.get(),category_entry.get(),cost_entry.get(),cond_entry.get(),genre_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins0)
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def check_profit():
+    ins="SELECT (sell_cost-order_cost) as profits from profit where barcode='{}';".format(barcode_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        select(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class StartPage:
     def __init__(self, window):
         def callback(event):
@@ -53,6 +272,7 @@ class StartPage:
         window.title("PJ Store")
         C.pack()
         window.mainloop()
+
 
 class AdminLoginPage:
     def __init__(self, window):
