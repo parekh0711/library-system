@@ -644,16 +644,18 @@ class EmployeeAdminDeletePage:
     def __init__(self, window):
 
         def delete_employee():
-            ins = "INSERT INTO employee VALUES({},{},'{}','{}','{}','{}','{}','{}','{}');".format(employeeid_entry.get(),aadhar_entry.get(),pan_entry.get(),firstname_entry.get(),lastname_entry.get(),dob_entry.get(),phone_entry.get(),address_entry.get(),designation_entry.get())
+            ins = "DELETE FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
             database = r"lib.db"
             conn = create_connection(database)
 
             if conn is not None:
+                select(conn,"select * from employee;")
                 execute_instruction(conn,ins)
-                select(conn,"SELECT * FROM employee;")
+                select(conn,"select * from employee;")
                 conn.commit()
             else:
                 print("Error! cannot create the database connection.")
+
 
         def fetch_employee():
             return
