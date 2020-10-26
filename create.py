@@ -101,13 +101,7 @@ def main():
                                     FOREIGN KEY(customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE
                                 );"""
 
-    policies_table ="""CREATE TABLE IF NOT EXISTS policies (
-                                    barcode text PRIMARY KEY NOT NULL,
-                                    description text NOT NULL,
-                                    length text NOT NULL,
-                                    type text NOT NULL,
-                                    FOREIGN KEY(barcode) REFERENCES product(barcode) ON DELETE CASCADE
-                                );"""
+    
 
     book_table = """CREATE TABLE IF NOT EXISTS book (
                                     barcode text PRIMARY KEY NOT NULL,
@@ -127,6 +121,13 @@ def main():
                                     author_id integer PRIMARY KEY NOT NULL,
                                     first_name text NOT NULL,
                                     last_name text NOT NULL
+                                );"""
+
+    policies_table ="""CREATE TABLE IF NOT EXISTS policies (
+                                    barcode text NOT NULL,
+                                    length text NOT NULL,
+                                    description text NOT NULL,
+                                    FOREIGN KEY(barcode) REFERENCES product(barcode),
                                 );"""
 
     media_table = """CREATE TABLE IF NOT EXISTS media (
@@ -157,7 +158,7 @@ def main():
         # execute_instruction(conn,book_table)
         # execute_instruction(conn, policies_table)
         # execute_instruction(conn, media_table)
-        select(conn,"""select * from outstanding;""")
+        #select(conn,"""select * from outstanding;""")
         conn.commit()
     else:
         print("Error! cannot create the database connection.")
