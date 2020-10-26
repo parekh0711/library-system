@@ -44,7 +44,7 @@ def add_employee(conn):
     phone="dummy"
     addr="dummy"
     desig="dummy"
-    ins="INSERT INTO employee VALUES("+emp_id+","+aadhar+","+pan+","+first+","+last+","+dob+","+phone+","+addr+","+desig+");"
+    ins="INSERT INTO employee VALUES("+ emp_id + ","+aadhar+","+pan+","+first+","+last+","+dob+","+phone+","+addr+","+desig+");"
     execute_instruction(conn,ins)
     conn.commit()
 

@@ -33,6 +33,212 @@ def select(conn,instruction):
     except Error as e:
         print(e)
 
+def change_employee():
+    fetch_employee()
+    ins0 = "DELETE FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
+    ins = "INSERT INTO employee VALUES({},{},'{}','{}','{}','{}','{}','{}','{}');".format(employeeid_entry.get(),aadhar_entry.get(),pan_entry.get(),firstname_entry.get(),lastname_entry.get(),dob_entry.get(),phone_entry.get(),address_entry.get(),designation_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins0)
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def fetch_employee():
+    ins0 = "SELECT * FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
+
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        select(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def delete_employee():
+    ins = "DELETE FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def add_policy():
+    ins = "INSERT INTO policies VALUES('{}','{}','{}');".format(barcode_entry.get(),length_entry.get(),description_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def delete_policy():
+    ins = "DELETE FROM policies WHERE barcode='{}';".format(barcode_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def change_policy():
+    fetch_policy()
+    ins0 = "DELETE FROM policies WHERE barcode='{}';".format(barcode_entry.get())
+    ins = "INSERT INTO policies VALUES('{}','{}','{}');".format(barcode_entry.get(),length_entry.get(),description_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins0)
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def fetch_policy():
+    ins0 = "SELECT * FROM policies WHERE barcode='{}';".format(barcode_entry.get())
+
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        select(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def add_product_book():
+    ins0 = "INSERT INTO product VALUES('{}',Book,In_stock);".format(barcode_entry.get())
+    ins="INSERT INTO book VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(barcode_entry.get(),authorid_entry.get(),title_entry.get(),year_entry.get(),publisher_entry.get(),genre_entry.get(),cost_entry.get(),cond_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        execute_instruction(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def add_product_media():
+    ins0 = "INSERT INTO product VALUES('{}',CD,In_stock);".format(barcode_entry.get())
+    ins="INSERT INTO media VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(barcode_entry.get(),title_entry.get(),year_entry.get(),runtime_entry.get(),category_entry.get(),cost_entry.get(),cond_entry.get(),genre_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        execute_instruction(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def delete_product_book():
+    ins = "DELETE FROM book WHERE barcode='{}';".format(barcode_entry.get())
+    ins0 = "DELETE FROM product WHERE barcode='{}';".format(barcode_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        execute_instruction(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def delete_media():
+    ins = "DELETE FROM media WHERE barcode='{}';".format(barcode_entry.get())
+    ins0 = "DELETE FROM product WHERE barcode='{}';".format(barcode_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        execute_instruction(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def fetch_book():
+    ins0 = "SELECT * FROM book WHERE barcode='{}';".format(barcode_entry.get())
+
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        select(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def fetch_media():
+    ins0 = "SELECT * FROM media WHERE barcode='{}';".format(barcode_entry.get())
+
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        select(conn,ins0)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def change_product_book():
+    fetch_book()
+    ins0 = "DELETE FROM book WHERE barcode='{}';".format(barcode_entry.get())
+    ins="INSERT INTO book VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(barcode_entry.get(),authorid_entry.get(),title_entry.get(),year_entry.get(),publisher_entry.get(),genre_entry.get(),cost_entry.get(),cond_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins0)
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def change_product_media():
+    fetch_media()
+    ins0 = "DELETE FROM media WHERE barcode='{}';".format(barcode_entry.get())
+    ins="INSERT INTO media VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(barcode_entry.get(),title_entry.get(),year_entry.get(),runtime_entry.get(),category_entry.get(),cost_entry.get(),cond_entry.get(),genre_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins0)
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+def check_profit():
+    ins="SELECT (sell_cost-order_cost) as profits from profit where barcode='{}';".format(barcode_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        select(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+
+
+
+
+
+
 class StartPage:
     def __init__(self, window):
         def callback(event):
@@ -208,7 +414,12 @@ class AdminPage:
             elif 96<=event.x<=445 and 451<=event.y<=498:
                 C.destroy()
                 EmployeeAdminDeletePage(window)
-            print(mode)
+            elif 860<=event.x<=1113 and 228<=event.y<=270:
+                ProductAdminTypeAddPage(window)
+            elif 835<=event.x<=1142 and 330<=event.y<=378:
+                ProductAdminTypeChangePage(window)
+            elif 835<=event.x<=1139 and 460<=event.y<=497:
+                ProductAdminTypeDeletePage(window)
 
         C = Canvas(window, height=756, width=1210)
         C.bind("<Button-1>", callback)
@@ -537,6 +748,33 @@ class EmployeeAdminDeletePage:
         designation_entry.place(x=608,y=528)
         window.mainloop()
 
+class ProductAdminTypePage:
+    def __init__(self, window):
+
+
+        def callback(event):
+            global flag
+            print(event.x,event.y)
+
+
+        C = Canvas(window, height=756, width=1210)
+        C.bind("<Button-1>", callback)
+        background_image = PhotoImage(file="images/adminproducttype.png")
+        C.create_image(0, 0, image=background_image, anchor="nw")
+        window.title("PJ Store")
+        C.pack()
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+
+        types = ['Book','CD']
+        option.set(types[0])
+        menu = OptionMenu(window, option, *types)
+        menu.config(font="Helvetica 15 bold")
+        m = window.nametowidget(menu.menuname)
+        m.config(font="Helvetica 15 bold")
+        menu.pack()
+        menu.place(x=138, y=325)
+
+        window.mainloop()
 
 if __name__ == "__main__":
     window = Tk()
