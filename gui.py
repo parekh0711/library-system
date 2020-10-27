@@ -254,45 +254,6 @@ class StartPage:
         C.pack()
         window.mainloop()
 
-class AdminLoginPage:
-    def __init__(self, window):
-        D = Canvas(window, height=756, width=1210)
-
-        def validate_login():
-            pwd = password_entry.get()
-            with open("pwd.txt","r") as source:
-                test = source.read()
-                test = test[:-1]
-                pwd2 = ''
-                for letter in test:
-                    pwd2+=chr(ord(letter)-1)
-                if pwd == pwd2:
-                    D.destroy()
-                    password_entry.destroy()
-                    login_button.destroy()
-                    AdminPage(window)
-                else:
-                    return
-
-        def callback(event):
-            global flag
-            print(event.x,event.y)
-        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
-        D.bind("<Button-1>", callback)
-        background = PhotoImage(file="images/adminlogin.png")
-        D.create_image(0, 0, image=background, anchor="nw")
-        password= StringVar()
-        password_entry = Entry(window,textvariable=password,show="*",width=30)
-        password_entry['font']=helv36
-        password_entry.pack()
-        password_entry.place(x=460,y=269)
-        login_button = Button(window,text="LOGIN",command = validate_login)
-        login_button['font']=helv36
-        login_button.pack()
-        login_button.place(x=573,y=335)
-        D.pack()
-        window.mainloop()
-
 class EmployeeLoginPage:
     def __init__(self, window):
         D = Canvas(window, height=756, width=1210)
@@ -308,6 +269,10 @@ class EmployeeLoginPage:
         def callback(event):
             global flag
             print(event.x,event.y)
+            if 38<=event.x<=210 and 617<=event.y<=667:
+                D.destroy()
+                StartPage(window)
+
         helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
         D.bind("<Button-1>", callback)
         background = PhotoImage(file="images/employeelogin.png")
@@ -317,6 +282,7 @@ class EmployeeLoginPage:
         password_entry['font']=helv36
         password_entry.pack()
         password_entry.place(x=460,y=269)
+
         login_button = Button(window,text="LOGIN",command = validate_login)
         login_button['font']=helv36
         login_button.pack()
@@ -342,7 +308,7 @@ class EmployeePage:
             elif 704<=event.x<=1036 and 180<=event.y<=223:
                 C.destroy()
                 EmployeeReturnPage(window,emp_id)
-            elif 706<=event.x<=1025 and 356<=event.y<=314:
+            elif 706<=event.x<=1025 and 314<=event.y<=356:
                 C.destroy()
                 EmployeeCheckPage(window,emp_id,2)
                 #book
@@ -350,7 +316,9 @@ class EmployeePage:
                 C.destroy()
                 EmployeeCheckPage(window,emp_id,3)
                 #CD
-
+            elif 38<=event.x<=210 and 617<=event.y<=667:
+                C.destroy()
+                EmployeePage(window)
 
         C = Canvas(window, height=756, width=1210)
         C.bind("<Button-1>", callback)
@@ -369,6 +337,9 @@ class EmployeeReservationPage:
                 C.destroy()
                 EmployeePage(window,emp_id)
 
+        def reserve():
+            pass
+
         #place entry box at (412,427) and (439,259)
         C = Canvas(window, height=756, width=1210)
         C.bind("<Button-1>", callback)
@@ -376,8 +347,173 @@ class EmployeeReservationPage:
         C.create_image(0, 0, image=background_image, anchor="nw")
         window.title("PJ Store")
         C.pack()
+
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+        startdate= StringVar()
+        startdate_entry = Entry(window,textvariable=startdate,width=15)
+        startdate_entry['font']=helv36
+        startdate_entry.pack()
+        startdate_entry.place(x=327,y=263)
+
+        reservedate= StringVar()
+        reservedate_entry = Entry(window,textvariable=reservedate,width=15)
+        reservedate_entry['font']=helv36
+        reservedate_entry.pack()
+        reservedate_entry.place(x=402,y=438)
+
+        customerid= StringVar()
+        customerid_entry = Entry(window,textvariable=customerid,width=15)
+        customerid_entry['font']=helv36
+        customerid_entry.pack()
+        customerid_entry.place(x=662,y=264)
+
+        barcode= StringVar()
+        barcode_entry = Entry(window,textvariable=barcode,width=15)
+        barcode_entry['font']=helv36
+        barcode_entry.pack()
+        barcode_entry.place(x=728,y=436)
+
+        login_button = Button(window,text="OK",command = reserve,width=10)
+        login_button['font']=helv36
+        login_button.pack()
+        login_button.place(x=572,y=625)
+
         window.mainloop()
 
+class EmployeeBillingPage:
+    def __init__(self, window,emp_id):
+        def callback(event):
+            global flag
+            print(event.x,event.y)
+            if 40<=event.x<=210 and 616<=event.y<=664:
+                C.destroy()
+                EmployeePage(window,emp_id)
+            elif 577<=event.x<=670 and 622<=event.y<=675:
+                outstanding()
+
+        def outstanding():
+            print("outstanding")
+
+        #place entry box at (412,427) and (439,259)
+        C = Canvas(window, height=756, width=1210)
+        C.bind("<Button-1>", callback)
+        background_image = PhotoImage(file="images/employeebilling.png")
+        C.create_image(0, 0, image=background_image, anchor="nw")
+        window.title("PJ Store")
+
+        C.pack()
+
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+        employeeid= StringVar()
+        employeeid_entry = Entry(window,textvariable=employeeid,width=15)
+        employeeid_entry['font']=helv36
+        employeeid_entry.pack()
+        employeeid_entry.place(x=415,y=207)
+
+        borroweddate= StringVar()
+        borroweddate_entry = Entry(window,textvariable=borroweddate,width=15)
+        borroweddate_entry['font']=helv36
+        borroweddate_entry.pack()
+        borroweddate_entry.place(x=706,y=438)
+
+        customerid= StringVar()
+        customerid_entry = Entry(window,textvariable=customerid,width=15)
+        customerid_entry['font']=helv36
+        customerid_entry.pack()
+        customerid_entry.place(x=413,y=417)
+
+        barcode= StringVar()
+        barcode_entry = Entry(window,textvariable=barcode,width=15)
+        barcode_entry['font']=helv36
+        barcode_entry.pack()
+        barcode_entry.place(x=719,y=207)
+
+        login_button = Button(window,text="OK",command = reserve,width=10)
+        login_button['font']=helv36
+        login_button.pack()
+        login_button.place(x=572,y=625)
+
+        window.mainloop()
+
+class EmployeeCheckPage:
+    def __init__(self, window,emp_id,mode):
+        def callback(event):
+            global flag
+            print(event.x,event.y)
+            if 40<=event.x<=210 and 616<=event.y<=664:
+                C.destroy()
+                EmployeePage(window,emp_id)
+
+        #place entry box at (412,427) and (439,259)
+        C = Canvas(window, height=756, width=1210)
+        C.bind("<Button-1>", callback)
+        background_image = PhotoImage(file="images/employeecheck.png")
+        C.create_image(0, 0, image=background_image, anchor="nw")
+        window.title("PJ Store")
+        C.pack()
+        window.mainloop()
+
+class EmployeeReturnPage:
+    def __init__(self, window,emp_id):
+        def callback(event):
+            global flag
+            print(event.x,event.y)
+            if 40<=event.x<=210 and 616<=event.y<=664:
+                C.destroy()
+                EmployeePage(window,emp_id)
+
+        #place entry box at (412,427) and (439,259)
+        C = Canvas(window, height=756, width=1210)
+        C.bind("<Button-1>", callback)
+        background_image = PhotoImage(file="images/employeereturn.png")
+        C.create_image(0, 0, image=background_image, anchor="nw")
+        window.title("PJ Store")
+        C.pack()
+        window.mainloop()
+
+#Admin Pages
+
+class AdminLoginPage:
+    def __init__(self, window):
+        D = Canvas(window, height=756, width=1210)
+
+        def validate_login():
+            pwd = password_entry.get()
+            with open("pwd.txt","r") as source:
+                test = source.read()
+                test = test[:-1]
+                pwd2 = ''
+                for letter in test:
+                    pwd2+=chr(ord(letter)-1)
+                if pwd == pwd2:
+                    D.destroy()
+                    password_entry.destroy()
+                    login_button.destroy()
+                    AdminPage(window)
+                else:
+                    return
+
+        def callback(event):
+            global flag
+            print(event.x,event.y)
+            if 38<=event.x<=210 and 617<=event.y<=667:
+                D.destroy()
+                StartPage(window)
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+        D.bind("<Button-1>", callback)
+        background = PhotoImage(file="images/adminlogin.png")
+        D.create_image(0, 0, image=background, anchor="nw")
+        password= StringVar()
+        password_entry = Entry(window,textvariable=password,show="*",width=30)
+        password_entry['font']=helv36
+        password_entry.pack()
+        password_entry.place(x=460,y=269)
+        login_button = Button(window,text="LOGIN",command = validate_login)
+        login_button['font']=helv36
+        login_button.pack()
+        login_button.place(x=573,y=335)
+        D.pack()
+        window.mainloop()
 
 class AdminPage:
     def __init__(self, window):
@@ -449,6 +585,7 @@ class EmployeeAdminAddPage:
         C.create_image(0, 0, image=background_image, anchor="nw")
         window.title("PJ Store")
         C.pack()
+
         helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
         employeeid= StringVar()
         employeeid_entry = Entry(window,textvariable=employeeid,width=30)
