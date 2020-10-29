@@ -78,7 +78,8 @@ def main():
 
     product_table = """CREATE TABLE IF NOT EXISTS product (
                                     barcode text PRIMARY KEY NOT NULL,
-                                    type text NOT NULL
+                                    type text NOT NULL,
+                                    state text NOT NULL
                                 );"""
 
     reservation_table = """CREATE TABLE IF NOT EXISTS reservation (
@@ -101,13 +102,12 @@ def main():
                                     FOREIGN KEY(customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE
                                 );"""
 
-    
+
 
     book_table = """CREATE TABLE IF NOT EXISTS book (
                                     barcode text PRIMARY KEY NOT NULL,
                                     author_id integer NOT NULL,
                                     title text NOT NULL,
-                                    state text NOT NULL,
                                     year text NOT NULL,
                                     publisher text NOT NULL,
                                     genre text NOT NULL,

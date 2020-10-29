@@ -4,13 +4,13 @@ customer_table = """ CREATE TABLE IF NOT EXISTS customer (
                                     last_name text NOT NULL,
                                     dob text NOT NULL,
                                     phone text NOT NULL,
-                                    address text NOT NULL
+                                    address text NOT NULL,
+                                    Renewed text NOT NULL
                                 ); """
 
 outstanding_table = """CREATE TABLE IF NOT EXISTS outstanding (
                                 customer_id integer NOT NULL,
                                 employee_id integer NOT NULL,
-                                renewed text NOT NULL,
                                 barcode text NOT NULL,
                                 amount numeric NOT NULL,
                                 penalty numeric NOT NULL,
@@ -66,7 +66,7 @@ borrowed_table ="""CREATE TABLE IF NOT EXISTS borrowed (
                                 FOREIGN KEY(customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE
                             );"""
 
-
+#
 
 book_table = """CREATE TABLE IF NOT EXISTS book (
                                 barcode text PRIMARY KEY NOT NULL,

@@ -1,11 +1,11 @@
 
 
-Employee  
+Employee
 Login Page
 MainPage - Reservation, Billing, Check Book, Check CD, Check Author, Return Item
-Reservation -> Start Date, Reserve Date, CustomerID, Barcode #check if barcode available on start Date
-Billing -> EmployeeID, CustomerID, Barcode, Borrowed Date
-Check Book -> Name, return Barcode
-Check CD -> Name, return barcode
-Check Author -> Name, Return all Titles
-Return Item-> CustomerID, EmployeeID, Barcode & return Renewed, Payment(Amount+Penalty)
+#Reservation -> Start Date, Reserve Date, CustomerID, Barcode #check if barcode available on start Date
+#Billing -> EmployeeID, CustomerID, Barcode, Borrowed Date
+#Check Book -> Name, return Barcode
+#Check CD -> Name, return barcode
+#Check Author -> Name, Return all Titles
+#Return Item-> CustomerID, EmployeeID, Barcode & return Renewed, Payment(Amount+Penalty)
