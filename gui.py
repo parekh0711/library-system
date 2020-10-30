@@ -59,6 +59,15 @@ def fetch_employee():
     else:
         print("Error! cannot create the database connection.")
 
+def select_and_print(conn,instruction):
+    try:
+        c=conn.cursor()
+        c.execute(instruction)
+        rows=c.fetchall()
+        return rows
+    except Error as e:
+        print(e)
+
 def delete_employee():
     ins = "DELETE FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
     database = r"lib.db"
@@ -330,6 +339,9 @@ class EmployeePage:
 
 class EmployeeReservationPage:
     def __init__(self, window,emp_id):
+
+        result_label=0
+        helvbig = tkFont.Font(family='Helvetica', size=24, weight='bold')
         def callback(event):
             global flag
             print(event.x,event.y)
@@ -337,8 +349,70 @@ class EmployeeReservationPage:
                 C.destroy()
                 EmployeePage(window,emp_id)
 
-        def reserve():
-            pass
+        def check_date(s,p):
+            l1=s.split('-')
+            l2=p.split('-')
+            year1=l1[0]
+            year2=l2[0]
+            month1=l1[1]
+            month2=l2[1]
+            day1=l1[2]
+            day2=l2[2]
+            if int(year1)>int(year2):
+                return True
+            elif int(year1)<int(year2):
+                return False
+            elif int(year1)==int(year2):
+                if int(month1)>int(month2):
+                    return True
+                elif int(month1)<int(month2):
+                    return False
+                elif int(month1)==int(month2):
+                    if int(day1)>int(day2):
+                        return True
+                    elif int(day1)<int(day2):
+                        return False
+                    elif int(day1)==int(day2):
+                        return False
+
+        def reserve_item():
+            global title_label
+            database = r"lib.db"
+            conn = create_connection(database)
+            stat = "Error"
+            if conn is not None:
+                ins1 = "SELECT state FROM product WHERE barcode='{}';".format(barcode_entry.get())
+                a=select_and_print(conn,ins1)
+                conn.commit()
+                if a[0][0]=="borrowed" or a[0][0]=="Borrowed":
+                    ins2= "SELECT due_date from outstanding where barcode='{}';".format(barcode_entry.get())
+                    b=select_and_print(conn,ins2)
+                    conn.commit()
+                    due=b[0][0]
+                    start=startdate_entry.get()
+                    if check_date(start,due):
+                        ins3="INSERT INTO reservation VALUES ('{}','{}','{}','{}');".format(customerid_entry.get(),barcode_entry.get(),reservedate_entry.get(),startdate_entry.get())
+                        execute_instruction(conn,ins3)
+                        conn.commit()
+                    else:
+                        stat="Unavailable"  #for now
+                else:
+                    ins4="INSERT INTO reservation VALUES ('{}','{}','{}','{}');".format(customerid_entry.get(),barcode_entry.get(),reservedate_entry.get(),startdate_entry.get())
+                    ins5="UPDATE product SET state='reserved' where barcode='{}';".format(barcode_entry.get())
+                    execute_instruction(conn,ins4)
+                    execute_instruction(conn,ins5)
+                    conn.commit()
+                    stat="Reserved"
+                try:
+                    title_label.destroy()
+                except:
+                    pass
+                title_label = Label(window, text=stat)
+                title_label['font']=helvbig
+                title_label.pack()
+                title_label.place(x=523,y=523)
+            else:
+                print("Error! cannot create the database connection.")
 
         #place entry box at (412,427) and (439,259)
         C = Canvas(window, height=756, width=1210)
@@ -373,7 +447,7 @@ class EmployeeReservationPage:
         barcode_entry.pack()
         barcode_entry.place(x=728,y=436)
 
-        login_button = Button(window,text="OK",command = reserve,width=10)
+        login_button = Button(window,text="OK",command = reserve_item,width=10)
         login_button['font']=helv36
         login_button.pack()
         login_button.place(x=572,y=625)
@@ -389,10 +463,35 @@ class EmployeeBillingPage:
                 C.destroy()
                 EmployeePage(window,emp_id)
             elif 577<=event.x<=670 and 622<=event.y<=675:
-                outstanding()
+                billing_item()
 
-        def outstanding():
-            print("outstanding")
+        def billing_item():
+            database = r"lib.db"
+            conn = create_connection(database)
+            if conn is not None:
+                ins1 = "SELECT date('{}','+007 days');".format(borroweddate_entry.get())
+                a=select_and_print(conn,ins1)
+                conn.commit()
+                res=a[0][0]
+                ins2 = "SELECT renewed FROM CUSTOMER WHERE customer_id='{}';".format(customerid_entry.get())
+                a=select_and_print(conn,ins2)
+                conn.commit()
+                if a[0][0]=="renewed":
+                    amt=0
+                    penalty=0
+                else:
+                    amt=100
+                    penalty=0
+                status='Not returned'
+                ins3 = "INSERT INTO outstanding VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(customerid_entry.get(),employeeid_entry.get(),barcode_entry.get(),amt,penalty,status,res,borroweddate_entry.get())
+                ins4 = "UPDATE product SET state='Borrowed' WHERE barcode='{}';".format(barcode_entry.get())
+                ins5 = "INSERT INTO borrowed VALUES('{}','{}');".format(barcode_entry.get(),customerid_entry.get())
+                execute_instruction(conn,ins3)
+                execute_instruction(conn,ins4)
+                execute_instruction(conn,ins5)
+                conn.commit()
+            else:
+                print("Error! cannot create the database connection.")
 
         #place entry box at (412,427) and (439,259)
         C = Canvas(window, height=756, width=1210)
@@ -409,6 +508,7 @@ class EmployeeBillingPage:
         employeeid_entry['font']=helv36
         employeeid_entry.pack()
         employeeid_entry.place(x=415,y=207)
+        employeeid.set(emp_id)
 
         borroweddate= StringVar()
         borroweddate_entry = Entry(window,textvariable=borroweddate,width=15)
@@ -428,21 +528,106 @@ class EmployeeBillingPage:
         barcode_entry.pack()
         barcode_entry.place(x=719,y=207)
 
-        login_button = Button(window,text="OK",command = reserve,width=10)
-        login_button['font']=helv36
-        login_button.pack()
-        login_button.place(x=572,y=625)
-
         window.mainloop()
 
 class EmployeeCheckPage:
     def __init__(self, window,emp_id,mode):
+        title_label = 0
+        def check_book():
+            global title_label
+            ins = "SELECT state FROM product,book WHERE book.title='{}' and book.barcode=product.barcode;".format(title_entry.get())
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                print("hi")
+                a=select_and_print(conn,ins)#returns the state as list of tuples which will have only one value
+                print(a)
+                #430 352
+                try:
+                    title_label.destroy()
+                except:
+                    pass
+                if a ==[]:
+                    a=["Not Found"]
+                if a[0][0]=="in_stock":
+                    a=["In Stock"]
+                title_label = Label(window, text=a[0])
+                title_label['font']=helvbig
+                title_label.pack()
+                title_label.place(x=530,y=341)
+                conn.commit()
+
+            else:
+                print("Error! cannot create the database connection.")
+
+        def check_media():
+            global title_label
+            ins = "SELECT state FROM product,media WHERE media.title='{}' and media.barcode=product.barcode;".format(title_entry.get())
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                a=select_and_print(conn,ins)#returns the state as list of tuples which will have only one value
+                try:
+                    title_label.destroy()
+                    print("destroyed")
+                except:
+                    pass
+                if a ==[]:
+                    a=["Not Found"]
+                if a[0][0]=="in_stock":
+                    a=["In Stock"]
+                title_label = Label(window, text=a[0])
+                title_label['font']=helvbig
+                title_label.pack()
+                title_label.place(x=530,y=341)
+                conn.commit()
+            else:
+                print("Error! cannot create the database connection.")
+
+        def check_author():
+            global title_label
+            name = title_entry.get().split()
+            ins = "SELECT book.title FROM author,book WHERE author.first_name='{}' and author.last_name='{}' and author.author_id=book.author_id;".format(name[0],name[1])
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                a=select_and_print(conn,ins)
+                conn.commit()
+                try:
+                    title_label.destroy()
+                except:
+                    pass
+
+                title_label = Label(window, text="{} books found.".format(len(a)))
+                title_label['font']=helvbig
+                title_label.pack()
+                title_label.place(x=530,y=341)
+
+                for tuple in a:
+                    print(tuple[0])
+
+            else:
+                print("Error! cannot create the database connection.")
+
+        def check_item():
+            if mode==1:
+                check_author()
+            elif mode==2:
+                check_book()
+            elif mode==3:
+                check_media()
+
         def callback(event):
             global flag
             print(event.x,event.y)
             if 40<=event.x<=210 and 616<=event.y<=664:
                 C.destroy()
                 EmployeePage(window,emp_id)
+            elif 577<event.x<=690 and 502<=event.y<=560:
+                check_item()
 
         #place entry box at (412,427) and (439,259)
         C = Canvas(window, height=756, width=1210)
@@ -451,24 +636,109 @@ class EmployeeCheckPage:
         C.create_image(0, 0, image=background_image, anchor="nw")
         window.title("PJ Store")
         C.pack()
+
+
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+        helvbig = tkFont.Font(family='Helvetica', size=24, weight='bold')
+        title= StringVar()
+        title_entry = Entry(window,textvariable=title,width=15)
+        title_entry['font']=helv36
+        title_entry.pack()
+        title_entry.place(x=525,y=238)
+
         window.mainloop()
 
 class EmployeeReturnPage:
+
     def __init__(self, window,emp_id):
+        renewed_label = 0
+        payment_label = 0
+        helvbig = tkFont.Font(family='Helvetica', size=24, weight='bold')
+
+        def return_item():
+            global renewed_label, payment_label
+            ins1 = "SELECT renewed FROM CUSTOMER WHERE customer_id='{}';".format(customerid_entry.get())
+            ins2 = "SELECT (amount+penalty) AS payment FROM outstanding where customer_id='{}' and employee_id='{}' and barcode='{}';".format(customerid_entry.get(),employeeid_entry.get(),barcode_entry.get())
+            ins3 = "UPDATE outstanding SET status='returned' where barcode='{}';".format(barcode_entry.get())
+            ins4 = "UPDATE product SET state='in_stock' where barcode='{}';".format(barcode_entry.get())
+            ins5 = "DELETE FROM borrowed WHERE barcode='{}';".format(barcode_entry.get())
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                a=select_and_print(conn,ins1)
+                b=select_and_print(conn,ins2)
+                execute_instruction(conn,ins3)
+                execute_instruction(conn,ins4)
+                conn.commit()
+
+                try:
+                    renewed_label.destroy()
+                except:
+                    pass
+                if a ==[]:
+                    a=["Not Found"]
+                if a[0][0]=="in_stock":
+                    a=["In Stock"]
+                renewed_label = Label(window, text=a[0][0])
+                renewed_label['font']=helvbig
+                renewed_label.pack()
+                renewed_label.place(x=901,y=310)
+
+                try:
+                    payment_label.destroy()
+                except:
+                    pass
+                if a ==[]:
+                    a=["Not Found"]
+                if a[0][0]=="in_stock":
+                    a=["In Stock"]
+                payment_label = Label(window, text="Amount = {} Rs".format(b[0][0]))
+                payment_label['font']=helvbig
+                payment_label.pack()
+                payment_label.place(x=901,y=452)
+
+            else:
+                print("Error! cannot create the database connection.")
+
+
         def callback(event):
             global flag
             print(event.x,event.y)
             if 40<=event.x<=210 and 616<=event.y<=664:
                 C.destroy()
                 EmployeePage(window,emp_id)
+            elif 577<=event.x<=671 and 624<=event.y<=675:
+                return_item()
 
-        #place entry box at (412,427) and (439,259)
+
         C = Canvas(window, height=756, width=1210)
         C.bind("<Button-1>", callback)
         background_image = PhotoImage(file="images/employeereturn.png")
         C.create_image(0, 0, image=background_image, anchor="nw")
         window.title("PJ Store")
         C.pack()
+
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+        employeeid= StringVar()
+        employeeid_entry = Entry(window,textvariable=employeeid,width=30)
+        employeeid_entry['font']=helv36
+        employeeid_entry.pack()
+        employeeid_entry.place(x=505,y=226)
+        employeeid.set(emp_id)
+
+        customerid= StringVar()
+        customerid_entry = Entry(window,textvariable=customerid,width=30)
+        customerid_entry['font']=helv36
+        customerid_entry.pack()
+        customerid_entry.place(x=505,y=366)
+
+        barcode= StringVar()
+        barcode_entry = Entry(window,textvariable=barcode,width=30)
+        barcode_entry['font']=helv36
+        barcode_entry.pack()
+        barcode_entry.place(x=505,y=484)
+
         window.mainloop()
 
 #Admin Pages

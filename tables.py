@@ -5,7 +5,7 @@ customer_table = """ CREATE TABLE IF NOT EXISTS customer (
                                     dob text NOT NULL,
                                     phone text NOT NULL,
                                     address text NOT NULL,
-                                    Renewed text NOT NULL
+                                    renewed text NOT NULL
                                 ); """
 
 outstanding_table = """CREATE TABLE IF NOT EXISTS outstanding (

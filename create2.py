@@ -233,8 +233,6 @@ def fetch_book():
     else:
         print("Error! cannot create the database connection.")
 
-
-
 def fetch_media():
     ins0 = "SELECT * FROM media WHERE barcode='{}';".format(barcode_entry.get())
 
@@ -255,7 +253,6 @@ def fetch_media():
 
     else:
         print("Error! cannot create the database connection.")
-
 
 def fetch_policy():
     ins0 = "SELECT * FROM policy WHERE barcode='{}';".format(barcode_entry.get())
@@ -315,7 +312,7 @@ def check_author():
 def return_item():
     ins1 = "SELECT renewed FROM CUSTOMER WHERE customer_id='{}';".format(customerid_entry.get())
     ins2 = "SELECT (amount+penalty) AS payment FROM outstanding where customer_id='{}' and employee_id='{}' and barcode='{}';".format(customerid_entry.get(),employeeid_entry.get(),barcode_entry.get())
-    ins3 = "UPDATE outstanding SET status=returned where barcode='{}';".format(barcode_entry.get())
+    ins3 = "UPDATE outstanding SET status='returned' where barcode='{}';".format(barcode_entry.get())
     ins4 = "UPDATE product SET state='in_stock' where barcode='{}';".format(barcode_entry.get())
     ins5 = "DELETE FROM borrowed WHERE barcode='{}';".format(barcode_entry.get())
     database = r"lib.db"
@@ -331,8 +328,7 @@ def return_item():
         payment_entry.set(b[0][0])
 
     else:
-        print("Error! cannot create the database connection."
-
+        print("Error! cannot create the database connection.")
 
 def billing_item():
     database = r"lib.db"
@@ -360,8 +356,7 @@ def billing_item():
         execute_instruction(conn,ins5)
         conn.commit()
     else:
-        print("Error! cannot create the database connection."
-
+        print("Error! cannot create the database connection.")
 
 def reserve_item():
     database = r"lib.db"
@@ -393,31 +388,31 @@ def reserve_item():
 
 
 def create_tables(conn):
-    #execute_instruction(conn, customer_table)
-    #execute_instruction(conn, product_table)
-    #execute_instruction(conn, reservation_table)
-    #execute_instruction(conn, profit_table)
-    #execute_instruction(conn, borrowed_table)
-    #execute_instruction(conn, employee_table)
-    #execute_instruction(conn, outstanding_table)
-    #execute_instruction(conn, author_table)
-    #execute_instruction(conn,book_table)
-    #execute_instruction(conn, media_table)
-    #execute_instruction(conn, salary_table)
+    execute_instruction(conn, customer_table)
+    execute_instruction(conn, product_table)
+    execute_instruction(conn, reservation_table)
+    execute_instruction(conn, profit_table)
+    execute_instruction(conn, borrowed_table)
+    execute_instruction(conn, employee_table)
+    execute_instruction(conn, outstanding_table)
+    execute_instruction(conn, author_table)
+    execute_instruction(conn,book_table)
+    execute_instruction(conn, media_table)
+    execute_instruction(conn, salary_table)
     execute_instruction(conn, policies_table)
 
 def insert_data(conn):
-    #execute_instruction(conn, insert_customer)
-    #execute_instruction(conn,insert_employee)
-    #execute_instruction(conn,insert_salary)
-    #execute_instruction(conn,insert_product)
-    #execute_instruction(conn,insert_book)
-    #execute_instruction(conn,insert_author)
-    #execute_instruction(conn, insert_media)
-    #execute_instruction(conn, insert_reservation)
-    #execute_instruction(conn, insert_borrowed)
-    #execute_instruction(conn, insert_profit)
-    #execute_instruction(conn, insert_outstanding)
+    execute_instruction(conn, insert_customer)
+    execute_instruction(conn,insert_employee)
+    execute_instruction(conn,insert_salary)
+    execute_instruction(conn,insert_product)
+    execute_instruction(conn,insert_book)
+    execute_instruction(conn,insert_author)
+    execute_instruction(conn, insert_media)
+    execute_instruction(conn, insert_reservation)
+    execute_instruction(conn, insert_borrowed)
+    execute_instruction(conn, insert_profit)
+    execute_instruction(conn, insert_outstanding)
     execute_instruction(conn, policies_table)
 
 def main():
@@ -426,11 +421,11 @@ def main():
 
     if conn is not None:
         # create projects table
-        execute_instruction(conn,"""PRAGMA foreign_keys = ON;""")
-        create_tables(conn)
-        insert_data(conn)
-        conn.commit()
-        select(conn,"""select * from employee;""")
+        # execute_instruction(conn,"""PRAGMA foreign_keys = ON;""")
+        # create_tables(conn)
+        # insert_data(conn)
+        # conn.commit()
+        select(conn,"""select * from outstanding;""")
         #conn.commit()
 
     else:
