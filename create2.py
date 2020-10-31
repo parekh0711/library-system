@@ -420,7 +420,7 @@ def main():
         # insert_data(conn)
         # conn.commit()
         # select(conn,"""select * from book;""")
-        print(pd.read_sql_query("SELECT * FROM book", conn))
+        print(pd.read_sql_query("SELECT * FROM policies", conn))
         #conn.commit()
 
     else:
