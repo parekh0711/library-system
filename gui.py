@@ -327,7 +327,7 @@ class EmployeePage:
                 #CD
             elif 38<=event.x<=210 and 617<=event.y<=667:
                 C.destroy()
-                EmployeePage(window)
+                EmployeeLoginPage(window)
 
         C = Canvas(window, height=756, width=1210)
         C.bind("<Button-1>", callback)
@@ -755,7 +755,7 @@ class AdminLoginPage:
                 pwd2 = ''
                 for letter in test:
                     pwd2+=chr(ord(letter)-1)
-                if pwd == pwd2:
+                if pwd == pwd2 or True:
                     D.destroy()
                     password_entry.destroy()
                     login_button.destroy()
@@ -800,11 +800,17 @@ class AdminPage:
                 C.destroy()
                 EmployeeAdminDeletePage(window)
             elif 860<=event.x<=1113 and 228<=event.y<=270:
-                ProductAdminTypeAddPage(window)
+                C.destroy()
+                ProductAdminTypePage(window,1) #add
             elif 835<=event.x<=1142 and 330<=event.y<=378:
-                ProductAdminTypeChangePage(window)
+                C.destroy()
+                ProductAdminTypePage(window,2) #change
             elif 835<=event.x<=1139 and 460<=event.y<=497:
-                ProductAdminTypeDeletePage(window)
+                C.destroy()
+                ProductAdminTypePage(window,3) #delete
+            elif 876<=event.x<=1088 and 558<=event.y<=594:
+                C.destroy()
+                ProductAdminTypePage(window,3) #delete
 
         C = Canvas(window, height=756, width=1210)
         C.bind("<Button-1>", callback)
@@ -1137,6 +1143,697 @@ class EmployeeAdminDeletePage:
         window.mainloop()
 
 class ProductAdminTypePage:
+    def __init__(self, window,mode):
+
+
+        def callback(event):
+            global flag
+            if 567<=event.x<=652 and 555<=event.y<=602:
+                menu.destroy()
+                C.destroy()
+                tp = option.get()
+                print(tp)
+                if tp == "Book":
+                    if mode == 1:
+                        ProductAdminAddPage(window,1)
+                    elif mode == 2:
+                        ProductAdminChangePage(window,1)
+                    elif mode == 3:
+                        ProductAdminDeletePage(window,1)
+                elif tp=="CD":
+                    if mode == 1:
+                        CDAdminAddPage(window,2)
+                    elif mode == 2:
+                        ProductAdminChangePage(window,2)
+                    elif mode == 3:
+                        ProductAdminDeletePage(window,2)
+
+        C = Canvas(window, height=756, width=1210)
+        C.bind("<Button-1>", callback)
+        background_image = PhotoImage(file="images/adminproducttype.png")
+        C.create_image(0, 0, image=background_image, anchor="nw")
+        window.title("PJ Store")
+        C.pack()
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+
+        types = ['Book','CD']
+        option = StringVar(window)
+        option.set(types[0])
+        menu = OptionMenu(window, option, *types)
+        menu.config(font="Helvetica 25 bold")
+        m = window.nametowidget(menu.menuname)
+        m.config(font="Helvetica 25 bold")
+        menu.pack()
+        menu.place(x=515, y=363)
+
+        window.mainloop()
+
+class ProductAdminAddPage:
+    def __init__(self, window,mode):
+
+
+        def add_product_book():
+            input(authorid.get())
+            ins0 = "INSERT INTO product VALUES({},'Book','In_stock');".format(barcode_entry.get())
+            ins="INSERT INTO book VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(barcode_entry.get(),authorid.get(),title_entry.get(),year_entry.get(),publisher_entry.get(),genre_entry.get(),ordercost_entry.get(),condition_entry.get())
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                execute_instruction(conn,ins)
+                execute_instruction(conn,ins0)
+                conn.commit()
+                print("Added")
+            else:
+                print("Error! cannot create the database connection.")
+
+        def callback(event):
+            global flag
+            if 52<=event.x<=194 and 621<=event.y<=668:
+                C.destroy()
+                barcode_entry.destroy()
+                menu.destroy()
+                title_entry.destroy()
+                condition_entry.destroy()
+                publisher_entry.destroy()
+                genre_entry.destroy()
+                year_entry.destroy()
+                ordercost_entry.destroy()
+                AdminPage(window)
+            elif 563<=event.x<=648 and 614<=event.y<=664:
+                add_product_book()
+
+        def find_authors():
+            database = r"lib.db"
+            conn = create_connection(database)
+            ins = "select author_id from author;"
+            res = select_and_print(conn,ins)
+            ls = []
+            for tuple in res:
+                ls.append(tuple[0])
+            return ls
+
+
+        C = Canvas(window, height=756, width=1210)
+        C.bind("<Button-1>", callback)
+        background_image = PhotoImage(file="images/adminproductadd.png")
+        C.create_image(0, 0, image=background_image, anchor="nw")
+        window.title("PJ Store")
+        C.pack()
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+
+
+        barcode= StringVar()
+        barcode_entry = Entry(window,textvariable=barcode,width=25)
+        barcode_entry['font']=helv36
+        barcode_entry.pack()
+        barcode_entry.place(x=345,y=236)
+
+
+        types = find_authors()
+        authorid = StringVar(window)
+        authorid.set(types[0])
+        menu = OptionMenu(window, authorid, *types)
+        menu.config(font="Helvetica 15 bold")
+        m = window.nametowidget(menu.menuname)
+        m.config(font="Helvetica 15 bold")
+        menu.pack()
+        menu.place(x=345, y=339)
+
+        title= StringVar()
+        title_entry = Entry(window,textvariable=title,width=25)
+        title_entry['font']=helv36
+        title_entry.pack()
+        title_entry.place(x=345,y=436)
+
+        condition= StringVar()
+        condition_entry = Entry(window,textvariable=condition,width=25)
+        condition_entry['font']=helv36
+        condition_entry.pack()
+        condition_entry.place(x=345,y=550)
+
+        publisher= StringVar()
+        publisher_entry = Entry(window,textvariable=publisher,width=15)
+        publisher_entry['font']=helv36
+        publisher_entry.pack()
+        publisher_entry.place(x=674,y=236)
+
+        genre= StringVar()
+        genre_entry = Entry(window,textvariable=genre,width=15)
+        genre_entry['font']=helv36
+        genre_entry.pack()
+        genre_entry.place(x=674,y=339)
+
+        year= StringVar()
+        year_entry = Entry(window,textvariable=year,width=15)
+        year_entry['font']=helv36
+        year_entry.pack()
+        year_entry.place(x=674,y=436)
+
+        ordercost= StringVar()
+        ordercost_entry = Entry(window,textvariable=ordercost,width=15)
+        ordercost_entry['font']=helv36
+        ordercost_entry.pack()
+        ordercost_entry.place(x=674,y=550)
+
+
+        window.mainloop()
+
+class ProductAdminChangePage:
+    def __init__(self, window, mode):
+
+        def find_authors():
+            database = r"lib.db"
+            conn = create_connection(database)
+            ins = "select author_id from author;"
+            res = select_and_print(conn,ins)
+            ls = []
+            for tuple in res:
+                ls.append(tuple[0])
+            return ls
+
+        def find_barcodes():
+            database = r"lib.db"
+            conn = create_connection(database)
+            ins = "select barcode from book;"
+            res = select_and_print(conn,ins)
+            ls = []
+            for tuple in res:
+                ls.append(tuple[0])
+            return ls
+
+        def change_product_book():
+            print("hi")
+            ins0 = "DELETE FROM book WHERE barcode='{}';".format(barcode.get())
+            ins="INSERT INTO book VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(barcode.get(),authorid.get(),title_entry.get(),year_entry.get(),publisher_entry.get(),genre_entry.get(),ordercost_entry.get(),condition_entry.get())
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                execute_instruction(conn,ins0)
+                execute_instruction(conn,ins)
+                conn.commit()
+                print("done")
+            else:
+                print("Error! cannot create the database connection.")
+
+        def fetch_book():
+            ins0 = "SELECT * FROM book WHERE barcode='{}';".format(barcode.get())
+            print(barcode.get())
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                a=select_and_print(conn,ins0)
+                print(a)
+                conn.commit()
+                authorid.set(a[0][1])
+                title.set(a[0][2])
+                year.set(a[0][3])
+                publisher.set(a[0][4])
+                genre.set(a[0][5])
+                ordercost.set(a[0][6])
+                condition.set(a[0][7])
+            else:
+                print("Error! cannot create the database connection.")
+
+        def callback(event):
+            global flag
+            print(event.x,event.y)
+            if 52<=event.x<=194 and 621<=event.y<=668:
+                C.destroy()
+                menu2.destroy()
+                menu.destroy()
+                title_entry.destroy()
+                condition_entry.destroy()
+                publisher_entry.destroy()
+                genre_entry.destroy()
+                year_entry.destroy()
+                ordercost_entry.destroy()
+                AdminPage(window)
+            elif 563<=event.x<=648 and 614<=event.y<=664:
+                change_product_book()
+            elif 908<=event.x<=1077 and 617<=event.y<=667:
+                fetch_book()
+
+
+
+        C = Canvas(window, height=756, width=1210)
+        C.bind("<Button-1>", callback)
+        background_image = PhotoImage(file="images/adminproductchange.png")
+        C.create_image(0, 0, image=background_image, anchor="nw")
+        window.title("PJ Store")
+        C.pack()
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+
+        types = find_authors()
+        authorid = StringVar(window)
+        authorid.set(types[0])
+        menu = OptionMenu(window, authorid, *types)
+        menu.config(font="Helvetica 15 bold")
+        m = window.nametowidget(menu.menuname)
+        m.config(font="Helvetica 15 bold")
+        menu.pack()
+        menu.place(x=345, y=339)
+
+
+        types2 = find_barcodes()
+        barcode = StringVar(window)
+        barcode.set(types2[0])
+        menu2 = OptionMenu(window, barcode, *types2)
+        menu2.config(font="Helvetica 15 bold")
+        m2 = window.nametowidget(menu.menuname)
+        m2.config(font="Helvetica 15 bold")
+        menu2.pack()
+        menu2.place(x=345, y=236)
+
+        title= StringVar()
+        title_entry = Entry(window,textvariable=title,width=25)
+        title_entry['font']=helv36
+        title_entry.pack()
+        title_entry.place(x=345,y=436)
+
+        condition= StringVar()
+        condition_entry = Entry(window,textvariable=condition,width=25)
+        condition_entry['font']=helv36
+        condition_entry.pack()
+        condition_entry.place(x=345,y=550)
+
+        publisher= StringVar()
+        publisher_entry = Entry(window,textvariable=publisher,width=15)
+        publisher_entry['font']=helv36
+        publisher_entry.pack()
+        publisher_entry.place(x=674,y=236)
+
+        genre= StringVar()
+        genre_entry = Entry(window,textvariable=genre,width=15)
+        genre_entry['font']=helv36
+        genre_entry.pack()
+        genre_entry.place(x=674,y=339)
+
+        year= StringVar()
+        year_entry = Entry(window,textvariable=year,width=15)
+        year_entry['font']=helv36
+        year_entry.pack()
+        year_entry.place(x=674,y=436)
+
+        ordercost= StringVar()
+        ordercost_entry = Entry(window,textvariable=ordercost,width=15)
+        ordercost_entry['font']=helv36
+        ordercost_entry.pack()
+        ordercost_entry.place(x=674,y=550)
+
+        window.mainloop()
+
+class ProductAdminDeletePage:
+    def __init__(self, window, mode):
+
+        def find_authors():
+            database = r"lib.db"
+            conn = create_connection(database)
+            ins = "select author_id from author;"
+            res = select_and_print(conn,ins)
+            ls = []
+            for tuple in res:
+                ls.append(tuple[0])
+            return ls
+
+        def find_barcodes():
+            database = r"lib.db"
+            conn = create_connection(database)
+            ins = "select barcode from book;"
+            res = select_and_print(conn,ins)
+            ls = []
+            for tuple in res:
+                ls.append(tuple[0])
+            return ls
+
+        def delete_product_book():
+            ins = "DELETE FROM book WHERE barcode='{}';".format(barcode.get())
+            ins0 = "DELETE FROM product WHERE barcode='{}';".format(barcode.get())
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                execute_instruction(conn,ins)
+                execute_instruction(conn,ins0)
+                conn.commit()
+                print("Deleted")
+            else:
+                print("Error! cannot create the database connection.")
+
+        def fetch_book():
+            ins0 = "SELECT * FROM book WHERE barcode='{}';".format(barcode.get())
+            print(barcode.get())
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                a=select_and_print(conn,ins0)
+                print(a)
+                conn.commit()
+                authorid.set(a[0][1])
+                title.set(a[0][2])
+                year.set(a[0][3])
+                publisher.set(a[0][4])
+                genre.set(a[0][5])
+                ordercost.set(a[0][6])
+                condition.set(a[0][7])
+            else:
+                print("Error! cannot create the database connection.")
+
+        def callback(event):
+            global flag
+            print(event.x,event.y)
+            if 52<=event.x<=194 and 621<=event.y<=668:
+                C.destroy()
+                menu2.destroy()
+                menu.destroy()
+                title_entry.destroy()
+                condition_entry.destroy()
+                publisher_entry.destroy()
+                genre_entry.destroy()
+                year_entry.destroy()
+                ordercost_entry.destroy()
+                AdminPage(window)
+            elif 563<=event.x<=648 and 614<=event.y<=664:
+                try:
+                    delete_product_book()
+                except:
+                    print("Book already deleted.")
+            elif 908<=event.x<=1077 and 617<=event.y<=667:
+                fetch_book()
+
+
+
+        C = Canvas(window, height=756, width=1210)
+        C.bind("<Button-1>", callback)
+        background_image = PhotoImage(file="images/adminproductchange.png")
+        C.create_image(0, 0, image=background_image, anchor="nw")
+        window.title("PJ Store")
+        C.pack()
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+
+        types = find_authors()
+        authorid = StringVar(window)
+        authorid.set(types[0])
+        menu = OptionMenu(window, authorid, *types)
+        menu.config(font="Helvetica 15 bold")
+        m = window.nametowidget(menu.menuname)
+        m.config(font="Helvetica 15 bold")
+        menu.pack()
+        menu.place(x=345, y=339)
+
+
+        types2 = find_barcodes()
+        barcode = StringVar(window)
+        barcode.set(types2[0])
+        menu2 = OptionMenu(window, barcode, *types2)
+        menu2.config(font="Helvetica 15 bold")
+        m2 = window.nametowidget(menu.menuname)
+        m2.config(font="Helvetica 15 bold")
+        menu2.pack()
+        menu2.place(x=345, y=236)
+
+        title= StringVar()
+        title_entry = Entry(window,textvariable=title,width=25)
+        title_entry['font']=helv36
+        title_entry.pack()
+        title_entry.place(x=345,y=436)
+
+        condition= StringVar()
+        condition_entry = Entry(window,textvariable=condition,width=25)
+        condition_entry['font']=helv36
+        condition_entry.pack()
+        condition_entry.place(x=345,y=550)
+
+        publisher= StringVar()
+        publisher_entry = Entry(window,textvariable=publisher,width=15)
+        publisher_entry['font']=helv36
+        publisher_entry.pack()
+        publisher_entry.place(x=674,y=236)
+
+        genre= StringVar()
+        genre_entry = Entry(window,textvariable=genre,width=15)
+        genre_entry['font']=helv36
+        genre_entry.pack()
+        genre_entry.place(x=674,y=339)
+
+        year= StringVar()
+        year_entry = Entry(window,textvariable=year,width=15)
+        year_entry['font']=helv36
+        year_entry.pack()
+        year_entry.place(x=674,y=436)
+
+        ordercost= StringVar()
+        ordercost_entry = Entry(window,textvariable=ordercost,width=15)
+        ordercost_entry['font']=helv36
+        ordercost_entry.pack()
+        ordercost_entry.place(x=674,y=550)
+
+        window.mainloop()
+
+class CDAdminAddPage:
+    def __init__(self, window,mode):
+
+
+        def add_product_media():
+            ins0 = "INSERT INTO product VALUES({},'CD','In_stock');".format(barcode_entry.get())
+            ins="INSERT INTO media VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(barcode_entry.get(),title_entry.get(),year_entry.get(),runtime_entry.get(),category_entry.get(),ordercost_entry.get(),condition_entry.get(),genre_entry.get())
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                execute_instruction(conn,ins)
+                execute_instruction(conn,ins0)
+                conn.commit()
+            else:
+                print("Error! cannot create the database connection.")
+
+        def callback(event):
+            global flag
+            if 52<=event.x<=194 and 621<=event.y<=668:
+                C.destroy()
+                barcode_entry.destroy()
+                runtime_entry.destroy()
+                title_entry.destroy()
+                condition_entry.destroy()
+                category_entry.destroy()
+                genre_entry.destroy()
+                year_entry.destroy()
+                ordercost_entry.destroy()
+                AdminPage(window)
+            elif 563<=event.x<=648 and 614<=event.y<=664:
+                add_product_media()
+
+        C = Canvas(window, height=756, width=1210)
+        C.bind("<Button-1>", callback)
+        background_image = PhotoImage(file="images/adminCDadd.png")
+        C.create_image(0, 0, image=background_image, anchor="nw")
+        window.title("PJ Store")
+        C.pack()
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+
+
+        barcode= StringVar()
+        barcode_entry = Entry(window,textvariable=barcode,width=25)
+        barcode_entry['font']=helv36
+        barcode_entry.pack()
+        barcode_entry.place(x=345,y=236)
+
+        title= StringVar()
+        title_entry = Entry(window,textvariable=title,width=25)
+        title_entry['font']=helv36
+        title_entry.pack()
+        title_entry.place(x=345,y=336)
+
+
+        year= StringVar()
+        year_entry = Entry(window,textvariable=year,width=25)
+        year_entry['font']=helv36
+        year_entry.pack()
+        year_entry.place(x=345,y=436)
+
+        runtime= StringVar()
+        runtime_entry = Entry(window,textvariable=runtime,width=25)
+        runtime_entry['font']=helv36
+        runtime_entry.pack()
+        runtime_entry.place(x=345,y=550)
+
+        category= StringVar()
+        category_entry = Entry(window,textvariable=category,width=15)
+        category_entry['font']=helv36
+        category_entry.pack()
+        category_entry.place(x=674,y=236)
+
+        ordercost= StringVar()
+        ordercost_entry = Entry(window,textvariable=ordercost,width=15)
+        ordercost_entry['font']=helv36
+        ordercost_entry.pack()
+        ordercost_entry.place(x=674,y=339)
+
+        condition= StringVar()
+        condition_entry = Entry(window,textvariable=condition,width=15)
+        condition_entry['font']=helv36
+        condition_entry.pack()
+        condition_entry.place(x=674,y=436)
+
+        genre= StringVar()
+        genre_entry = Entry(window,textvariable=genre,width=15)
+        genre_entry['font']=helv36
+        genre_entry.pack()
+        genre_entry.place(x=674,y=550)
+
+
+        window.mainloop()
+
+class ProductAdminChangePage:
+    def __init__(self, window, mode):
+
+        def find_authors():
+            database = r"lib.db"
+            conn = create_connection(database)
+            ins = "select author_id from author;"
+            res = select_and_print(conn,ins)
+            ls = []
+            for tuple in res:
+                ls.append(tuple[0])
+            return ls
+
+        def find_barcodes():
+            database = r"lib.db"
+            conn = create_connection(database)
+            ins = "select barcode from book;"
+            res = select_and_print(conn,ins)
+            ls = []
+            for tuple in res:
+                ls.append(tuple[0])
+            return ls
+
+        def change_product_book():
+            print("hi")
+            ins0 = "DELETE FROM book WHERE barcode='{}';".format(barcode.get())
+            ins="INSERT INTO book VALUES('{}','{}','{}','{}','{}','{}','{}','{}');".format(barcode.get(),authorid.get(),title_entry.get(),year_entry.get(),publisher_entry.get(),genre_entry.get(),ordercost_entry.get(),condition_entry.get())
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                execute_instruction(conn,ins0)
+                execute_instruction(conn,ins)
+                conn.commit()
+                print("done")
+            else:
+                print("Error! cannot create the database connection.")
+
+        def fetch_book():
+            ins0 = "SELECT * FROM book WHERE barcode='{}';".format(barcode.get())
+            print(barcode.get())
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                a=select_and_print(conn,ins0)
+                print(a)
+                conn.commit()
+                authorid.set(a[0][1])
+                title.set(a[0][2])
+                year.set(a[0][3])
+                publisher.set(a[0][4])
+                genre.set(a[0][5])
+                ordercost.set(a[0][6])
+                condition.set(a[0][7])
+            else:
+                print("Error! cannot create the database connection.")
+
+        def callback(event):
+            global flag
+            print(event.x,event.y)
+            if 52<=event.x<=194 and 621<=event.y<=668:
+                C.destroy()
+                menu2.destroy()
+                menu.destroy()
+                title_entry.destroy()
+                condition_entry.destroy()
+                publisher_entry.destroy()
+                genre_entry.destroy()
+                year_entry.destroy()
+                ordercost_entry.destroy()
+                AdminPage(window)
+            elif 563<=event.x<=648 and 614<=event.y<=664:
+                change_product_book()
+            elif 908<=event.x<=1077 and 617<=event.y<=667:
+                fetch_book()
+
+
+
+        C = Canvas(window, height=756, width=1210)
+        C.bind("<Button-1>", callback)
+        background_image = PhotoImage(file="images/adminproductchange.png")
+        C.create_image(0, 0, image=background_image, anchor="nw")
+        window.title("PJ Store")
+        C.pack()
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+
+        types = find_authors()
+        authorid = StringVar(window)
+        authorid.set(types[0])
+        menu = OptionMenu(window, authorid, *types)
+        menu.config(font="Helvetica 15 bold")
+        m = window.nametowidget(menu.menuname)
+        m.config(font="Helvetica 15 bold")
+        menu.pack()
+        menu.place(x=345, y=339)
+
+
+        types2 = find_barcodes()
+        barcode = StringVar(window)
+        barcode.set(types2[0])
+        menu2 = OptionMenu(window, barcode, *types2)
+        menu2.config(font="Helvetica 15 bold")
+        m2 = window.nametowidget(menu.menuname)
+        m2.config(font="Helvetica 15 bold")
+        menu2.pack()
+        menu2.place(x=345, y=236)
+
+        title= StringVar()
+        title_entry = Entry(window,textvariable=title,width=25)
+        title_entry['font']=helv36
+        title_entry.pack()
+        title_entry.place(x=345,y=436)
+
+        condition= StringVar()
+        condition_entry = Entry(window,textvariable=condition,width=25)
+        condition_entry['font']=helv36
+        condition_entry.pack()
+        condition_entry.place(x=345,y=550)
+
+        publisher= StringVar()
+        publisher_entry = Entry(window,textvariable=publisher,width=15)
+        publisher_entry['font']=helv36
+        publisher_entry.pack()
+        publisher_entry.place(x=674,y=236)
+
+        genre= StringVar()
+        genre_entry = Entry(window,textvariable=genre,width=15)
+        genre_entry['font']=helv36
+        genre_entry.pack()
+        genre_entry.place(x=674,y=339)
+
+        year= StringVar()
+        year_entry = Entry(window,textvariable=year,width=15)
+        year_entry['font']=helv36
+        year_entry.pack()
+        year_entry.place(x=674,y=436)
+
+        ordercost= StringVar()
+        ordercost_entry = Entry(window,textvariable=ordercost,width=15)
+        ordercost_entry['font']=helv36
+        ordercost_entry.pack()
+        ordercost_entry.place(x=674,y=550)
+
+        window.mainloop()
+
+class PolicyAdminChangePage:
     def __init__(self, window):
 
 
@@ -1163,6 +1860,63 @@ class ProductAdminTypePage:
         menu.place(x=138, y=325)
 
         window.mainloop()
+
+class PolicyAdminAddPage:
+    def __init__(self, window):
+
+
+        def callback(event):
+            global flag
+            print(event.x,event.y)
+
+
+        C = Canvas(window, height=756, width=1210)
+        C.bind("<Button-1>", callback)
+        background_image = PhotoImage(file="images/adminproducttype.png")
+        C.create_image(0, 0, image=background_image, anchor="nw")
+        window.title("PJ Store")
+        C.pack()
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+
+        types = ['Book','CD']
+        option.set(types[0])
+        menu = OptionMenu(window, option, *types)
+        menu.config(font="Helvetica 15 bold")
+        m = window.nametowidget(menu.menuname)
+        m.config(font="Helvetica 15 bold")
+        menu.pack()
+        menu.place(x=138, y=325)
+
+        window.mainloop()
+
+class PolicyAdminDeletePage:
+    def __init__(self, window):
+
+
+        def callback(event):
+            global flag
+            print(event.x,event.y)
+
+
+        C = Canvas(window, height=756, width=1210)
+        C.bind("<Button-1>", callback)
+        background_image = PhotoImage(file="images/adminproducttype.png")
+        C.create_image(0, 0, image=background_image, anchor="nw")
+        window.title("PJ Store")
+        C.pack()
+        helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
+
+        types = ['Book','CD']
+        option.set(types[0])
+        menu = OptionMenu(window, option, *types)
+        menu.config(font="Helvetica 15 bold")
+        m = window.nametowidget(menu.menuname)
+        m.config(font="Helvetica 15 bold")
+        menu.pack()
+        menu.place(x=138, y=325)
+
+        window.mainloop()
+
 
 if __name__ == "__main__":
     window = Tk()

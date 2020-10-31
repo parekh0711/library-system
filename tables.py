@@ -98,3 +98,10 @@ media_table = """CREATE TABLE IF NOT EXISTS media (
                                 genre text NOT NULL,
                                 FOREIGN KEY(barcode) REFERENCES product(barcode)
                             );"""
+
+policies_table= """CREATE TABLE IF NOT EXISTS policies(
+                                barcode text PRIMARY KEY NOT NULL,
+                                description text NOT NULL,
+                                length text NOT NULL,
+                                FOREIGN KEY(barcode) REFERENCES product(barcode)
+                            );"""

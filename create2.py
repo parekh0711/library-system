@@ -3,13 +3,8 @@ from insert import *
 from create import *
 import sqlite3
 from sqlite3 import Error
+import pandas as pd
 
-policies_table ="""CREATE TABLE IF NOT EXISTS policies (
-                                barcode text NOT NULL,
-                                length text NOT NULL,
-                                description text NOT NULL,
-                                FOREIGN KEY(barcode) REFERENCES product(barcode)
-                            );"""
 def create_connection(db_file):
     conn = None
     try:
@@ -212,7 +207,6 @@ def fetch_employee():
     else:
         print("Error! cannot create the database connection.")
 
-
 def fetch_book():
     ins0 = "SELECT * FROM book WHERE barcode='{}';".format(barcode_entry.get())
 
@@ -406,14 +400,14 @@ def insert_data(conn):
     execute_instruction(conn,insert_employee)
     execute_instruction(conn,insert_salary)
     execute_instruction(conn,insert_product)
-    execute_instruction(conn,insert_book)
     execute_instruction(conn,insert_author)
+    execute_instruction(conn,insert_book)
     execute_instruction(conn, insert_media)
     execute_instruction(conn, insert_reservation)
     execute_instruction(conn, insert_borrowed)
     execute_instruction(conn, insert_profit)
     execute_instruction(conn, insert_outstanding)
-    execute_instruction(conn, policies_table)
+    execute_instruction(conn, insert_policies)
 
 def main():
     database = r"lib.db"
@@ -425,7 +419,8 @@ def main():
         # create_tables(conn)
         # insert_data(conn)
         # conn.commit()
-        select(conn,"""select * from outstanding;""")
+        # select(conn,"""select * from book;""")
+        print(pd.read_sql_query("SELECT * FROM book", conn))
         #conn.commit()
 
     else:

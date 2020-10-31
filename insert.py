@@ -74,7 +74,7 @@ insert_product = """INSERT INTO product VALUES('B1001',"Book",'Borrowed'),
                                               ('M1012',"CD",'in_stock');"""
 
 insert_reservation = """INSERT INTO reservation VALUES('113008','M1006','2020-10-22','2020-11-01'),
-                                                      ('113008','B10010','2020-10-21','2020-10-31'),
+                                                      ('113008','B1010','2020-10-21','2020-10-31'),
                                                       ('113012','M1003','2020-10-20','2020-11-10');"""
 
 insert_media = """INSERT INTO media VALUES('M1001','Yeh Jawani Hai Deewani','2013','2h56m','Movie','200','Good','Romance Comedy'),
