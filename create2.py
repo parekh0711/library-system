@@ -303,6 +303,52 @@ def check_author():
     else:
         print("Error! cannot create the database connection.")
 
+
+
+
+
+
+
+
+
+
+
+
+def add_author():
+    ins = "INSERT INTO author VALUES('{}','{}','{}');".format(authorid_entry.get(),firstname_entry.get(),lastname_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+
+def add_customer():
+    ins = "INSERT INTO customer VALUES('{}','{}','{}');".format(customerid_entry.get(),firstname_entry.get(),lastname_entry.get(),dob_entry.get(),phone_entry.get(),address_entry.get(),renewed_entry.get())
+    database = r"lib.db"
+    conn = create_connection(database)
+
+    if conn is not None:
+        execute_instruction(conn,ins)
+        conn.commit()
+    else:
+        print("Error! cannot create the database connection.")
+
+
+
+
+
+
+
+
+
+
+
+
+
 def return_item():
     ins1 = "SELECT renewed FROM CUSTOMER WHERE customer_id='{}';".format(customerid_entry.get())
     ins2 = "SELECT (amount+penalty) AS payment FROM outstanding where customer_id='{}' and employee_id='{}' and barcode='{}';".format(customerid_entry.get(),employeeid_entry.get(),barcode_entry.get())
@@ -379,6 +425,18 @@ def reserve_item():
             conn.commit()
     else:
         print("Error! cannot create the database connection.")
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def create_tables(conn):

@@ -944,19 +944,43 @@ class EmployeeAdminChangePage:
     def __init__(self, window):
 
         def change_employee():
+            print("hi")
+            ins0="DELETE FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
             ins = "INSERT INTO employee VALUES({},{},'{}','{}','{}','{}','{}','{}','{}');".format(employeeid_entry.get(),aadhar_entry.get(),pan_entry.get(),firstname_entry.get(),lastname_entry.get(),dob_entry.get(),phone_entry.get(),address_entry.get(),designation_entry.get())
             database = r"lib.db"
             conn = create_connection(database)
 
             if conn is not None:
+                execute_instruction(conn,ins0)
+                conn.commit()
                 execute_instruction(conn,ins)
+
                 select(conn,"SELECT * FROM employee;")
                 conn.commit()
             else:
                 print("Error! cannot create the database connection.")
 
         def fetch_employee():
-            return
+            ins0 = "SELECT * FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
+
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                a=select_and_print(conn,ins0)
+                conn.commit()
+                employeeid.set(a[0][0])
+                aadhar.set(a[0][1])
+                pan.set(a[0][2])
+                firstname.set(a[0][3])
+                lastname.set(a[0][4])
+                dob.set(a[0][5])
+                phone.set(a[0][6])
+                address.set(a[0][7])
+                designation.set(a[0][8])
+            else:
+                print("Error! cannot create the database connection.")
+
 
         def callback(event):
             global flag
@@ -1066,7 +1090,25 @@ class EmployeeAdminDeletePage:
 
 
         def fetch_employee():
-            return
+            ins0 = "SELECT * FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
+
+            database = r"lib.db"
+            conn = create_connection(database)
+
+            if conn is not None:
+                a=select_and_print(conn,ins0)
+                conn.commit()
+                employeeid.set(a[0][0])
+                aadhar.set(a[0][1])
+                pan.set(a[0][2])
+                firstname.set(a[0][3])
+                lastname.set(a[0][4])
+                dob.set(a[0][5])
+                phone.set(a[0][6])
+                address.set(a[0][7])
+                designation.set(a[0][8])
+            else:
+                print("Error! cannot create the database connection.")
 
         def callback(event):
             global flag
