@@ -840,7 +840,8 @@ class EmployeeAdminAddPage:
     def __init__(self, window):
 
         def add_employee():
-            ins = "INSERT INTO employee VALUES({},{},'{}','{}','{}','{}','{}','{}','{}');".format(employeeid_entry.get(),aadhar_entry.get(),pan_entry.get(),firstname_entry.get(),lastname_entry.get(),dob_entry.get(),phone_entry.get(),address_entry.get(),designation_entry.get())
+            desig = designation.get().split(",")[0]
+            ins = "INSERT INTO employee VALUES({},{},'{}','{}','{}','{}','{}','{}','{}');".format(employeeid_entry.get(),aadhar_entry.get(),pan_entry.get(),firstname_entry.get(),lastname_entry.get(),dob_entry.get(),phone_entry.get(),address_entry.get(),desig)
             database = r"lib.db"
             conn = create_connection(database)
 
@@ -862,13 +863,23 @@ class EmployeeAdminAddPage:
                 pan_entry.destroy()
                 firstname_entry.destroy()
                 lastname_entry.destroy()
-                designation_entry.destroy()
-                salary_entry.destroy()
+                menu2.destroy()
+                # salary_entry.destroy()
                 phone_entry.destroy()
                 address_entry.destroy()
                 dob_entry.destroy()
                 C.destroy()
                 AdminPage(window)
+
+        def find_desigs():
+            database = r"lib.db"
+            conn = create_connection(database)
+            ins = "select * from salary;"
+            res = select_and_print(conn,ins)
+            ls = []
+            for tuple in res:
+                ls.append(tuple[0]+","+str(tuple[1]))
+            return ls
 
 
         C = Canvas(window, height=756, width=1210)
@@ -885,68 +896,78 @@ class EmployeeAdminAddPage:
         employeeid_entry.pack()
         employeeid_entry.place(x=218,y=208)
 
-        aadhar= StringVar()
-        aadhar_entry = Entry(window,textvariable=aadhar,width=30)
-        aadhar_entry['font']=helv36
-        aadhar_entry.pack()
-        aadhar_entry.place(x=218,y=288)
-
         firstname= StringVar()
         firstname_entry = Entry(window,textvariable=firstname,width=30)
         firstname_entry['font']=helv36
         firstname_entry.pack()
-        firstname_entry.place(x=218,y=368)
+        firstname_entry.place(x=218,y=288)
 
         lastname= StringVar()
         lastname_entry = Entry(window,textvariable=lastname,width=30)
         lastname_entry['font']=helv36
         lastname_entry.pack()
-        lastname_entry.place(x=218,y=448)
-
-        pan= StringVar()
-        pan_entry = Entry(window,textvariable=pan,width=30)
-        pan_entry['font']=helv36
-        pan_entry.pack()
-        pan_entry.place(x=218,y=528)
+        lastname_entry.place(x=218,y=368)
 
         dob= StringVar()
         dob_entry = Entry(window,textvariable=dob,width=30)
         dob_entry['font']=helv36
         dob_entry.pack()
-        dob_entry.place(x=608,y=208)
+        dob_entry.place(x=218,y=448)
 
         phone= StringVar()
         phone_entry = Entry(window,textvariable=phone,width=30)
         phone_entry['font']=helv36
         phone_entry.pack()
-        phone_entry.place(x=608,y=288)
+        phone_entry.place(x=218,y=528)
+
+        aadhar= StringVar()
+        aadhar_entry = Entry(window,textvariable=aadhar,width=30)
+        aadhar_entry['font']=helv36
+        aadhar_entry.pack()
+        aadhar_entry.place(x=608,y=208)
+
+        pan= StringVar()
+        pan_entry = Entry(window,textvariable=pan,width=30)
+        pan_entry['font']=helv36
+        pan_entry.pack()
+        pan_entry.place(x=608,y=288)
+
+        # designation= StringVar()
+        # designation_entry = Entry(window,textvariable=designation,width=30)
+        # designation_entry['font']=helv36
+        # designation_entry.pack()
+        # designation_entry.place(x=608,y=368)
+
+        types2 = find_desigs()
+        designation = StringVar(window)
+        designation.set(types2[0])
+        menu2 = OptionMenu(window, designation, *types2)
+        menu2.config(font="Helvetica 15 bold")
+        m2 = window.nametowidget(menu2.menuname)
+        m2.config(font="Helvetica 15 bold")
+        menu2.pack()
+        menu2.place(x=608, y=408)
+
+        # salary= StringVar()
+        # salary_entry = Entry(window,textvariable=salary,width=30)
+        # salary_entry['font']=helv36
+        # salary_entry.pack()
+        # salary_entry.place(x=608,y=448)
 
         address= StringVar()
         address_entry = Entry(window,textvariable=address,width=30)
         address_entry['font']=helv36
         address_entry.pack()
-        address_entry.place(x=608,y=368)
-
-        salary= StringVar()
-        salary_entry = Entry(window,textvariable=salary,width=30)
-        salary_entry['font']=helv36
-        salary_entry.pack()
-        salary_entry.place(x=608,y=448)
-
-        designation= StringVar()
-        designation_entry = Entry(window,textvariable=designation,width=30)
-        designation_entry['font']=helv36
-        designation_entry.pack()
-        designation_entry.place(x=608,y=528)
+        address_entry.place(x=608,y=528)
         window.mainloop()
 
 class EmployeeAdminChangePage:
     def __init__(self, window):
 
         def change_employee():
-            print("hi")
-            ins0="DELETE FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
-            ins = "INSERT INTO employee VALUES({},{},'{}','{}','{}','{}','{}','{}','{}');".format(employeeid_entry.get(),aadhar_entry.get(),pan_entry.get(),firstname_entry.get(),lastname_entry.get(),dob_entry.get(),phone_entry.get(),address_entry.get(),designation_entry.get())
+            desig = designation.get().split(",")[0]
+            ins0="DELETE FROM employee WHERE employee_id='{}';".format(employeeid.get())
+            ins = "INSERT INTO employee VALUES({},{},'{}','{}','{}','{}','{}','{}','{}');".format(employeeid.get(),aadhar_entry.get(),pan_entry.get(),firstname_entry.get(),lastname_entry.get(),dob_entry.get(),phone_entry.get(),address_entry.get(),desig)
             database = r"lib.db"
             conn = create_connection(database)
 
@@ -960,16 +981,27 @@ class EmployeeAdminChangePage:
             else:
                 print("Error! cannot create the database connection.")
 
+        def find_desigs():
+            database = r"lib.db"
+            conn = create_connection(database)
+            ins = "select * from salary;"
+            res = select_and_print(conn,ins)
+            ls = []
+            for tuple in res:
+                ls.append(tuple[0]+","+str(tuple[1]))
+            return ls
+
         def fetch_employee():
-            ins0 = "SELECT * FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
+            ins0 = "SELECT * FROM employee WHERE employee_id='{}';".format(employeeid.get())
 
             database = r"lib.db"
             conn = create_connection(database)
 
             if conn is not None:
                 a=select_and_print(conn,ins0)
+                # b= select_and_print(conn,ins)
                 conn.commit()
-                employeeid.set(a[0][0])
+                # salary.set(b[0][0])
                 aadhar.set(a[0][1])
                 pan.set(a[0][2])
                 firstname.set(a[0][3])
@@ -977,26 +1009,37 @@ class EmployeeAdminChangePage:
                 dob.set(a[0][5])
                 phone.set(a[0][6])
                 address.set(a[0][7])
-                designation.set(a[0][8])
+                for index,tuple in enumerate(types):
+                    if a[0][8] in tuple:
+                        designation.set(types[index])
             else:
                 print("Error! cannot create the database connection.")
 
+        def find_empids():
+            database = r"lib.db"
+            conn = create_connection(database)
+            ins = "select employee_id from employee;"
+            res = select_and_print(conn,ins)
+            ls = []
+            for tuple in res:
+                ls.append(tuple[0])
+            return ls
 
         def callback(event):
             global flag
             print(event.x,event.y)
-            if 1016<=event.x<=1125 and 622<=event.y<=670:
+            if 916<=event.x<=1125 and 622<=event.y<=666:
                 change_employee()
             elif 520<=event.x<=685 and 622<=event.y<=666:
                 fetch_employee()
             elif 55<=event.x<=195 and 625<=event.y<=668:
-                employeeid_entry.destroy()
+                menu2.destroy()
                 aadhar_entry.destroy()
                 pan_entry.destroy()
                 firstname_entry.destroy()
                 lastname_entry.destroy()
-                designation_entry.destroy()
-                salary_entry.destroy()
+                menu.destroy()
+                # salary_entry.destroy()
                 phone_entry.destroy()
                 address_entry.destroy()
                 dob_entry.destroy()
@@ -1011,86 +1054,102 @@ class EmployeeAdminChangePage:
         window.title("PJ Store")
         C.pack()
         helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
-        employeeid= StringVar()
-        employeeid_entry = Entry(window,textvariable=employeeid,width=30)
-        employeeid_entry['font']=helv36
-        employeeid_entry.pack()
-        employeeid_entry.place(x=218,y=208)
 
-        aadhar= StringVar()
-        aadhar_entry = Entry(window,textvariable=aadhar,width=30)
-        aadhar_entry['font']=helv36
-        aadhar_entry.pack()
-        aadhar_entry.place(x=218,y=288)
+        types2 = find_empids()
+        employeeid = StringVar(window)
+        employeeid.set(types2[0])
+        menu2 = OptionMenu(window, employeeid, *types2)
+        menu2.config(font="Helvetica 15 bold")
+        m2 = window.nametowidget(menu2.menuname)
+        m2.config(font="Helvetica 15 bold")
+        menu2.pack()
+        menu2.place(x=218, y=208)
+
+        # employeeid= StringVar()
+        # employeeid_entry = Entry(window,textvariable=employeeid,width=30)
+        # employeeid_entry['font']=helv36
+        # employeeid_entry.pack()
+        # employeeid_entry.place(x=218,y=208)
 
         firstname= StringVar()
         firstname_entry = Entry(window,textvariable=firstname,width=30)
         firstname_entry['font']=helv36
         firstname_entry.pack()
-        firstname_entry.place(x=218,y=368)
+        firstname_entry.place(x=218,y=288)
 
         lastname= StringVar()
         lastname_entry = Entry(window,textvariable=lastname,width=30)
         lastname_entry['font']=helv36
         lastname_entry.pack()
-        lastname_entry.place(x=218,y=448)
-
-        pan= StringVar()
-        pan_entry = Entry(window,textvariable=pan,width=30)
-        pan_entry['font']=helv36
-        pan_entry.pack()
-        pan_entry.place(x=218,y=528)
+        lastname_entry.place(x=218,y=368)
 
         dob= StringVar()
         dob_entry = Entry(window,textvariable=dob,width=30)
         dob_entry['font']=helv36
         dob_entry.pack()
-        dob_entry.place(x=608,y=208)
+        dob_entry.place(x=218,y=448)
 
         phone= StringVar()
         phone_entry = Entry(window,textvariable=phone,width=30)
         phone_entry['font']=helv36
         phone_entry.pack()
-        phone_entry.place(x=608,y=288)
+        phone_entry.place(x=218,y=528)
+
+        aadhar= StringVar()
+        aadhar_entry = Entry(window,textvariable=aadhar,width=30)
+        aadhar_entry['font']=helv36
+        aadhar_entry.pack()
+        aadhar_entry.place(x=608,y=208)
+
+        pan= StringVar()
+        pan_entry = Entry(window,textvariable=pan,width=30)
+        pan_entry['font']=helv36
+        pan_entry.pack()
+        pan_entry.place(x=608,y=288)
+
+        types = find_desigs()
+        designation = StringVar(window)
+        designation.set(types[0])
+        menu = OptionMenu(window, designation, *types)
+        menu.config(font="Helvetica 15 bold")
+        m = window.nametowidget(menu.menuname)
+        m.config(font="Helvetica 15 bold")
+        menu.pack()
+        menu.place(x=608, y=408)
 
         address= StringVar()
         address_entry = Entry(window,textvariable=address,width=30)
         address_entry['font']=helv36
         address_entry.pack()
-        address_entry.place(x=608,y=368)
-
-        salary= StringVar()
-        salary_entry = Entry(window,textvariable=salary,width=30)
-        salary_entry['font']=helv36
-        salary_entry.pack()
-        salary_entry.place(x=608,y=448)
-
-        designation= StringVar()
-        designation_entry = Entry(window,textvariable=designation,width=30)
-        designation_entry['font']=helv36
-        designation_entry.pack()
-        designation_entry.place(x=608,y=528)
+        address_entry.place(x=608,y=528)
         window.mainloop()
 
 class EmployeeAdminDeletePage:
     def __init__(self, window):
 
         def delete_employee():
-            ins = "DELETE FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
+            ins = "DELETE FROM employee WHERE employee_id='{}';".format(employeeid.get())
             database = r"lib.db"
             conn = create_connection(database)
 
             if conn is not None:
-                select(conn,"select * from employee;")
                 execute_instruction(conn,ins)
-                select(conn,"select * from employee;")
                 conn.commit()
             else:
                 print("Error! cannot create the database connection.")
 
+        def find_desigs():
+            database = r"lib.db"
+            conn = create_connection(database)
+            ins = "select * from salary;"
+            res = select_and_print(conn,ins)
+            ls = []
+            for tuple in res:
+                ls.append(tuple[0]+","+str(tuple[1]))
+            return ls
 
         def fetch_employee():
-            ins0 = "SELECT * FROM employee WHERE employee_id='{}';".format(employeeid_entry.get())
+            ins0 = "SELECT * FROM employee WHERE employee_id='{}';".format(employeeid.get())
 
             database = r"lib.db"
             conn = create_connection(database)
@@ -1098,7 +1157,6 @@ class EmployeeAdminDeletePage:
             if conn is not None:
                 a=select_and_print(conn,ins0)
                 conn.commit()
-                employeeid.set(a[0][0])
                 aadhar.set(a[0][1])
                 pan.set(a[0][2])
                 firstname.set(a[0][3])
@@ -1106,25 +1164,43 @@ class EmployeeAdminDeletePage:
                 dob.set(a[0][5])
                 phone.set(a[0][6])
                 address.set(a[0][7])
-                designation.set(a[0][8])
+                for index,tuple in enumerate(types):
+                    if a[0][8] in tuple:
+                        designation.set(types[index])
             else:
                 print("Error! cannot create the database connection.")
 
+        def find_empids():
+            database = r"lib.db"
+            conn = create_connection(database)
+            ins = "select employee_id from employee;"
+            res = select_and_print(conn,ins)
+            ls = []
+            for tuple in res:
+                ls.append(tuple[0])
+            return ls
+
         def callback(event):
             global flag
-            print(event.x,event.y)
-            if 1016<=event.x<=1125 and 622<=event.y<=670:
-                delete_employee()
+            if 916<=event.x<=1125 and 622<=event.y<=666:
+                try:
+                    delete_employee()
+                    print("Deleted")
+                except:
+                    print("Already Deleted.")
             elif 520<=event.x<=685 and 622<=event.y<=666:
-                fetch_employee()
+                try:
+                    fetch_employee()
+                except:
+                    print("Deleted.")
             elif 55<=event.x<=195 and 625<=event.y<=668:
-                employeeid_entry.destroy()
+                menu2.destroy()
                 aadhar_entry.destroy()
                 pan_entry.destroy()
                 firstname_entry.destroy()
                 lastname_entry.destroy()
-                designation_entry.destroy()
-                salary_entry.destroy()
+                menu.destroy()
+                # salary_entry.destroy()
                 phone_entry.destroy()
                 address_entry.destroy()
                 dob_entry.destroy()
@@ -1139,65 +1215,68 @@ class EmployeeAdminDeletePage:
         window.title("PJ Store")
         C.pack()
         helv36 = tkFont.Font(family='Helvetica', size=15, weight='bold')
-        employeeid= StringVar()
-        employeeid_entry = Entry(window,textvariable=employeeid,width=30)
-        employeeid_entry['font']=helv36
-        employeeid_entry.pack()
-        employeeid_entry.place(x=218,y=208)
 
-        aadhar= StringVar()
-        aadhar_entry = Entry(window,textvariable=aadhar,width=30)
-        aadhar_entry['font']=helv36
-        aadhar_entry.pack()
-        aadhar_entry.place(x=218,y=288)
+        types2 = find_empids()
+        employeeid = StringVar(window)
+        employeeid.set(types2[0])
+        menu2 = OptionMenu(window, employeeid, *types2)
+        menu2.config(font="Helvetica 15 bold")
+        m2 = window.nametowidget(menu2.menuname)
+        m2.config(font="Helvetica 15 bold")
+        menu2.pack()
+        menu2.place(x=218, y=208)
 
         firstname= StringVar()
         firstname_entry = Entry(window,textvariable=firstname,width=30)
         firstname_entry['font']=helv36
         firstname_entry.pack()
-        firstname_entry.place(x=218,y=368)
+        firstname_entry.place(x=218,y=288)
 
         lastname= StringVar()
         lastname_entry = Entry(window,textvariable=lastname,width=30)
         lastname_entry['font']=helv36
         lastname_entry.pack()
-        lastname_entry.place(x=218,y=448)
-
-        pan= StringVar()
-        pan_entry = Entry(window,textvariable=pan,width=30)
-        pan_entry['font']=helv36
-        pan_entry.pack()
-        pan_entry.place(x=218,y=528)
+        lastname_entry.place(x=218,y=368)
 
         dob= StringVar()
         dob_entry = Entry(window,textvariable=dob,width=30)
         dob_entry['font']=helv36
         dob_entry.pack()
-        dob_entry.place(x=608,y=208)
+        dob_entry.place(x=218,y=448)
 
         phone= StringVar()
         phone_entry = Entry(window,textvariable=phone,width=30)
         phone_entry['font']=helv36
         phone_entry.pack()
-        phone_entry.place(x=608,y=288)
+        phone_entry.place(x=218,y=528)
+
+        aadhar= StringVar()
+        aadhar_entry = Entry(window,textvariable=aadhar,width=30)
+        aadhar_entry['font']=helv36
+        aadhar_entry.pack()
+        aadhar_entry.place(x=608,y=208)
+
+        pan= StringVar()
+        pan_entry = Entry(window,textvariable=pan,width=30)
+        pan_entry['font']=helv36
+        pan_entry.pack()
+        pan_entry.place(x=608,y=288)
+
+        types = find_desigs()
+        designation = StringVar(window)
+        designation.set(types[0])
+        menu = OptionMenu(window, designation, *types)
+        menu.config(font="Helvetica 15 bold")
+        m = window.nametowidget(menu.menuname)
+        m.config(font="Helvetica 15 bold")
+        menu.pack()
+        menu.place(x=608, y=408)
 
         address= StringVar()
         address_entry = Entry(window,textvariable=address,width=30)
         address_entry['font']=helv36
         address_entry.pack()
-        address_entry.place(x=608,y=368)
-
-        salary= StringVar()
-        salary_entry = Entry(window,textvariable=salary,width=30)
-        salary_entry['font']=helv36
-        salary_entry.pack()
-        salary_entry.place(x=608,y=448)
-
-        designation= StringVar()
-        designation_entry = Entry(window,textvariable=designation,width=30)
-        designation_entry['font']=helv36
-        designation_entry.pack()
-        designation_entry.place(x=608,y=528)
+        address_entry.place(x=608,y=528)
         window.mainloop()
 
 class ProductAdminTypePage:
